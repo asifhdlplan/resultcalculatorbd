@@ -21,7 +21,7 @@ const gradeMap = {
   "F": 0.0
 };
 
-// create dropdown
+// create dropdowns
 const subjectDiv = document.getElementById("subjects");
 
 subjects.forEach((sub, index) => {
@@ -65,10 +65,12 @@ function calculateGPA() {
     failed ? "Failed (GPA 0)" : "Your GPA: " + gpa.toFixed(2);
 }
 
-// PDF generation
+// ✅ FIXED PDF FUNCTION
 function downloadPDF() {
 
+  const element = document.getElementById("pdfContent");
   const table = document.getElementById("pdfTable");
+
   table.innerHTML = "";
 
   let total = 0;
@@ -110,12 +112,17 @@ function downloadPDF() {
   document.getElementById("finalGrade").innerText =
     gpa === 5 ? "Golden A+ ✨" : "";
 
-  const element = document.getElementById("pdfContent");
-
-  html2pdf().set({
-    margin: 10,
-    filename: "SSC_Result.pdf",
-    html2canvas: { scale: 2 },
-    jsPDF: { orientation: "portrait" }
-  }).from(element).save();
+  // 🔥 IMPORTANT DELAY FIX
+  setTimeout(() => {
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: "SSC_Result.pdf",
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      })
+      .from(element)
+      .save();
+  }, 300);
 }
