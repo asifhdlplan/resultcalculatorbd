@@ -33,11 +33,9 @@ button:hover {
   background: #0072ff;
 }
 
-/* ✅ IMPORTANT FIX */
+/* ✅ IMPORTANT (DO NOT HIDE WITH display:none permanently) */
 #pdfContent {
-  position: fixed;
-  left: -9999px;
-  top: 0;
+  display: none;
   width: 800px;
   background: white;
   color: black;
