@@ -33,17 +33,15 @@ button:hover {
   background: #0072ff;
 }
 
-/* PDF STYLE */
+/* ✅ IMPORTANT FIX */
 #pdfContent {
-  display: none;
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 800px;
   background: white;
   color: black;
   padding: 20px;
-  width: 800px;
-}
-
-#pdfContent h1 {
-  text-align: center;
 }
 
 #pdfContent table {
@@ -51,11 +49,8 @@ button:hover {
   border-collapse: collapse;
 }
 
-#pdfContent table, th, td {
-  border: 1px solid #ddd;
-}
-
 #pdfContent th, td {
+  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
