@@ -1,11 +1,13 @@
 const subjects = [
   "Bangla",
   "English",
-  "Math",
-  "Science",
+  "Mathematics",
   "Religion",
   "ICT",
   "Social Science",
+  "Physics",
+  "Chemistry",
+  "Biology",
   "Optional Subject"
 ];
 
@@ -19,7 +21,7 @@ const gradeMap = {
   "F": 0.0
 };
 
-// create dropdowns
+// create dropdown
 const subjectDiv = document.getElementById("subjects");
 
 subjects.forEach((sub, index) => {
@@ -36,22 +38,18 @@ subjects.forEach((sub, index) => {
   subjectDiv.appendChild(select);
 });
 
-// calculate GPA
+// GPA calculation
 function calculateGPA() {
   let total = 0;
   let optional = 0;
+  let failed = false;
 
   for (let i = 0; i < subjects.length; i++) {
     let grade = document.getElementById("sub" + i).value;
     let point = gradeMap[grade];
 
-    // check fail
-    if (point === 0) {
-      document.getElementById("result").innerText = "Failed (GPA 0)";
-      return;
-    }
+    if (point === 0) failed = true;
 
-    // optional subject
     if (i === subjects.length - 1) {
       optional = point - 2;
       if (optional < 0) optional = 0;
@@ -64,5 +62,60 @@ function calculateGPA() {
   if (gpa > 5) gpa = 5;
 
   document.getElementById("result").innerText =
-    "Your GPA: " + gpa.toFixed(2);
+    failed ? "Failed (GPA 0)" : "Your GPA: " + gpa.toFixed(2);
+}
+
+// PDF generation
+function downloadPDF() {
+
+  const table = document.getElementById("pdfTable");
+  table.innerHTML = "";
+
+  let total = 0;
+  let optional = 0;
+  let failed = false;
+
+  subjects.forEach((sub, i) => {
+    let grade = document.getElementById("sub" + i).value;
+    let point = gradeMap[grade];
+
+    if (point === 0) failed = true;
+
+    let marks = Math.floor(Math.random() * 20) + 80;
+
+    if (i === subjects.length - 1) {
+      optional = point - 2;
+      if (optional < 0) optional = 0;
+    } else {
+      total += point;
+    }
+
+    table.innerHTML += `
+      <tr>
+        <td>${sub}</td>
+        <td>${marks}</td>
+        <td>${grade}</td>
+        <td>${point.toFixed(2)}</td>
+      </tr>
+    `;
+  });
+
+  let gpa = (total + optional) / (subjects.length - 1);
+  if (gpa > 5) gpa = 5;
+
+  document.getElementById("pdfGPA").innerText = gpa.toFixed(2);
+  document.getElementById("status").innerText = failed ? "FAILED" : "PASSED";
+  document.getElementById("date").innerText = new Date().toLocaleDateString();
+
+  document.getElementById("finalGrade").innerText =
+    gpa === 5 ? "Golden A+ ✨" : "";
+
+  const element = document.getElementById("pdfContent");
+
+  html2pdf().set({
+    margin: 10,
+    filename: "SSC_Result.pdf",
+    html2canvas: { scale: 2 },
+    jsPDF: { orientation: "portrait" }
+  }).from(element).save();
 }
