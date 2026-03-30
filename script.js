@@ -38,7 +38,7 @@ subjects.forEach((sub, index) => {
   subjectDiv.appendChild(select);
 });
 
-// GPA calculation
+// GPA
 function calculateGPA() {
   let total = 0;
   let optional = 0;
@@ -65,7 +65,7 @@ function calculateGPA() {
     failed ? "Failed (GPA 0)" : "Your GPA: " + gpa.toFixed(2);
 }
 
-// ✅ FIXED PDF FUNCTION
+// ✅ FINAL FIXED PDF
 function downloadPDF() {
 
   const element = document.getElementById("pdfContent");
@@ -92,14 +92,14 @@ function downloadPDF() {
       total += point;
     }
 
-    table.innerHTML += `
-      <tr>
-        <td>${sub}</td>
-        <td>${marks}</td>
-        <td>${grade}</td>
-        <td>${point.toFixed(2)}</td>
-      </tr>
+    let tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${sub}</td>
+      <td>${marks}</td>
+      <td>${grade}</td>
+      <td>${point.toFixed(2)}</td>
     `;
+    table.appendChild(tr);
   });
 
   let gpa = (total + optional) / (subjects.length - 1);
@@ -112,17 +112,21 @@ function downloadPDF() {
   document.getElementById("finalGrade").innerText =
     gpa === 5 ? "Golden A+ ✨" : "";
 
-  // 🔥 IMPORTANT DELAY FIX
+  // 🔥 SHOW → GENERATE → HIDE
+  element.style.display = "block";
+
   setTimeout(() => {
     html2pdf()
       .set({
         margin: 10,
         filename: "SSC_Result.pdf",
-        image: { type: "jpeg", quality: 1 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+        jsPDF: { format: "a4" }
       })
       .from(element)
-      .save();
-  }, 300);
+      .save()
+      .then(() => {
+        element.style.display = "none";
+      });
+  }, 800);
 }
